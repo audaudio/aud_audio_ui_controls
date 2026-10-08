@@ -1,6 +1,6 @@
 name: aud_audio_ui_controls
 description: "Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls"
-version: 0.0.1
+version: 0.0.2
 publish_to: none
 homepage: https://github.com/audaudio/aud_audio_ui_controls
 repository: https://github.com/audaudio/aud_audio_ui_controls
