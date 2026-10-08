@@ -1,0 +1,19 @@
+// @license
+// Copyright (c) Audanika. All Rights Reserved.
+//
+// Use of this source code is governed by terms that can be
+// found in the LICENSE file in the root of this package.
+
+{
+  "name": "aud_audio_ui_controls",
+  "summary": "Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls.",
+  "domain": [
+    "Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls"
+  ],
+  "interfaces": {
+    "uses": {
+      "aud_audio": "package dependency"
+    },
+    "usedBy": {}
+  }
+}

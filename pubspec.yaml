@@ -1,13 +1,20 @@
 name: aud_audio_ui_controls
-description: "A new Flutter package project."
+description: "Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls"
 version: 0.0.1
-homepage:
+publish_to: none
+homepage: https://github.com/audaudio/aud_audio_ui_controls
+repository: https://github.com/audaudio/aud_audio_ui_controls
 
 environment:
-  sdk: ^3.13.4
+  sdk: ^3.12.2
   flutter: ">=1.17.0"
 
 dependencies:
+  aud_audio:
+    git:
+      url: https://github.com/audaudio/aud_audio.git
+      tag_pattern: "{{version}}"
+    version: ^0.0.1
   flutter:
     sdk: flutter
 
@@ -15,6 +22,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  helix: ^1.11.0
+  dna_audanika: ^0.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
