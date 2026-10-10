@@ -10,11 +10,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  aud_audio:
-    git:
-      url: git@github.com:audaudio/aud_audio.git
-      tag_pattern: "{{version}}"
-    version: ^0.0.2
   flutter:
     sdk: flutter
 
