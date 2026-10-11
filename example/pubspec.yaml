@@ -1,0 +1,21 @@
+name: aud_audio_ui_controls_example
+description: "Example of aud_audio_ui_controls: knobs bound to an in-memory parameter sink, without an engine."
+publish_to: none
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  aud_audio_ui_controls:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

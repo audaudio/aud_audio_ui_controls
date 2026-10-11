@@ -8,12 +8,14 @@
   "name": "aud_audio_ui_controls",
   "summary": "Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls.",
   "domain": [
-    "Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls"
+    "Controls after AudioKit Controls (ui-002): AudControl, drag geometries, pointer averaging, AudArcKnob, theme",
+    "Parameter binding free of the engine (ui-003): AudParamSpec, AudParamSink, AudParamBinding, AudParamKnob"
   ],
   "interfaces": {
-    "uses": {
-      "aud_audio": "package dependency"
-    },
-    "usedBy": {}
+    "uses": {},
+    "usedBy": {
+      "aud_audio_vst3": "the editor app binds its knobs to the shell protocol",
+      "aud_audio_auv3": "the editor of the AUv3 extension binds its knobs to the parameter tree"
+    }
   }
 }

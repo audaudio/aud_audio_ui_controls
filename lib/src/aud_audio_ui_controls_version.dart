@@ -9,4 +9,4 @@
 // coverage:ignore-file
 
 /// The version of the `aud_audio_ui_controls` package.
-const String audAudioUiControlsVersion = '0.0.2';
+const String audAudioUiControlsVersion = '0.1.0';
