@@ -35,6 +35,7 @@ class AudArcKnob extends StatelessWidget {
     this.onEnded,
   });
 
+  // ...........................................................................
   /// The value in 0 to 1.
   final double value;
 
@@ -93,6 +94,7 @@ class AudArcKnobPainter extends CustomPainter {
     required this.strokeWidth,
   });
 
+  // ...........................................................................
   /// The value in 0 to 1.
   final double value;
 
@@ -108,6 +110,7 @@ class AudArcKnobPainter extends CustomPainter {
   /// The stroke.
   final double strokeWidth;
 
+  // ...........................................................................
   /// Where the arc starts: 135°, bottom left.
   static const double startAngle = 0.75 * math.pi;
 
@@ -137,7 +140,7 @@ class AudArcKnobPainter extends CustomPainter {
     canvas.drawArc(
       rect,
       startAngle + sweepAngle * from,
-      math.max(sweepAngle * (to - from), 0.001),
+      math.max(sweepAngle * (to - from), _minSweepAngle),
       false,
       paint..color = valueColor,
     );
@@ -150,4 +153,8 @@ class AudArcKnobPainter extends CustomPainter {
       oldDelegate.trackColor != trackColor ||
       oldDelegate.valueColor != valueColor ||
       oldDelegate.strokeWidth != strokeWidth;
+
+  // The smallest sweep of the value's arc, so that its round caps paint a dot
+  // when the value is at the origin.
+  static const double _minSweepAngle = 0.001;
 }

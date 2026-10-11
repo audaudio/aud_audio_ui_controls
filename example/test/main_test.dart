@@ -45,14 +45,11 @@ void main() {
       await tester.pumpWidget(ControlsExample(sink: sink));
       await tester.tap(find.text('Automate'));
       await tester.pump(const Duration(milliseconds: 600));
-      final cutoff = sink.values[const AudParamAddress('filter', 'cutoff')];
+      final cutoff = sink.values[cutoffSpec.address];
       expect(cutoff, isNotNull);
       expect(cutoff, greaterThan(200));
       await tester.pump(const Duration(seconds: 2));
-      expect(
-        sink.values[const AudParamAddress('filter', 'cutoff')],
-        closeTo(200, 1),
-      );
+      expect(sink.values[cutoffSpec.address], closeTo(200, 1));
     });
   });
 }

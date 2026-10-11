@@ -8,14 +8,20 @@ import 'package:aud_audio_ui_controls/aud_audio_ui_controls.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const address = AudParamAddress('out', 'master');
+  const address = AudParamAddress(nodeId: 'out', paramId: 'master');
 
   group('AudParamChange', () {
     test('compares by address and value', () {
-      const change = AudParamChange(address, 0.5);
-      expect(change, const AudParamChange(address, 0.5));
-      expect(change.hashCode, const AudParamChange(address, 0.5).hashCode);
-      expect(change == const AudParamChange(address, 0.25), isFalse);
+      const change = AudParamChange(address: address, value: 0.5);
+      expect(change, const AudParamChange(address: address, value: 0.5));
+      expect(
+        change.hashCode,
+        const AudParamChange(address: address, value: 0.5).hashCode,
+      );
+      expect(
+        change == const AudParamChange(address: address, value: 0.25),
+        isFalse,
+      );
       expect(change.toString(), 'AudParamChange(/out/master, 0.5)');
     });
   });
@@ -42,8 +48,8 @@ void main() {
     test('emits changes from outside', () async {
       final changes = <AudParamChange>[];
       sink.changes.listen(changes.add);
-      sink.emit(const AudParamChange(address, 2));
-      expect(changes, [const AudParamChange(address, 2)]);
+      sink.emit(const AudParamChange(address: address, value: 2));
+      expect(changes, [const AudParamChange(address: address, value: 2)]);
       expect(sink.values[address], 2);
     });
   });

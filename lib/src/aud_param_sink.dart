@@ -13,8 +13,9 @@ import 'aud_param_spec.dart';
 /// the engine, the host's automation or another view.
 final class AudParamChange {
   /// Creates a change.
-  const AudParamChange(this.address, this.value);
+  const AudParamChange({required this.address, required this.value});
 
+  // ...........................................................................
   /// The parameter.
   final AudParamAddress address;
 
@@ -43,15 +44,19 @@ final class AudParamChange {
 /// The sink knows nothing of Flutter, so a plugin's editor, an app and a
 /// test implement it alike.
 abstract interface class AudParamSink {
+  // ...........................................................................
   /// Starts a gesture on [address].
   void beginGesture(AudParamAddress address);
 
+  // ...........................................................................
   /// Sets the plain [value] of [address].
   void setValue(AudParamAddress address, double value);
 
+  // ...........................................................................
   /// Ends the gesture on [address].
   void endGesture(AudParamAddress address);
 
+  // ...........................................................................
   /// Values that changed outside the controls.
   Stream<AudParamChange> get changes;
 }
@@ -65,6 +70,7 @@ class AudMemoryParamSink implements AudParamSink {
 
   final _changes = StreamController<AudParamChange>.broadcast(sync: true);
 
+  // ...........................................................................
   /// The current plain values.
   final Map<AudParamAddress, double> values = {};
 

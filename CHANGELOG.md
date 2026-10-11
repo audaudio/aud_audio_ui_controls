@@ -16,6 +16,23 @@
 
 - Drop the dependency on the umbrella
 
+
+### Changed
+
+- Fix angular drag, removal mid-drag and stepped format
+
+- Let one gesture turn the angular drag over the whole range
+
+- End the gesture of a control removed during the drag without errors
+
+- Keep the unit of stepped values and show fractional steps
+
+- Name the parameters of AudParamAddress and AudParamChange
+
+- Rebuild the README along the template with runnable examples and every export
+
+- Add landmarks and named constants; rebuild only the call log of the example
+
 ## 0.0.2 - 2026-10-08
 
 ### Added

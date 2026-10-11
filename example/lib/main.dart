@@ -9,35 +9,40 @@ import 'dart:async';
 import 'package:aud_audio_ui_controls/aud_audio_ui_controls.dart';
 import 'package:flutter/material.dart';
 
+/// The frequency of the oscillator.
+const frequencySpec = AudParamSpec(
+  address: AudParamAddress(nodeId: 'osc', paramId: 'frequency'),
+  min: 20,
+  max: 20000,
+  defaultValue: 220,
+  logarithmic: true,
+  name: 'Frequency',
+  unit: 'Hz',
+);
+
+/// The cutoff of the filter, which "Automate" sweeps.
+const cutoffSpec = AudParamSpec(
+  address: AudParamAddress(nodeId: 'filter', paramId: 'cutoff'),
+  min: 20,
+  max: 20000,
+  defaultValue: 1000,
+  logarithmic: true,
+  name: 'Cutoff',
+  unit: 'Hz',
+);
+
+/// The gain of the output.
+const gainSpec = AudParamSpec(
+  address: AudParamAddress(nodeId: 'out', paramId: 'gain'),
+  min: 0,
+  max: 1,
+  defaultValue: 0.5,
+  name: 'Gain',
+);
+
 /// The parameters of the example: those of the graph document that the
 /// spike's plugins render (oscillator, filter, mixer).
-const specs = [
-  AudParamSpec(
-    address: AudParamAddress('osc', 'frequency'),
-    min: 20,
-    max: 20000,
-    defaultValue: 220,
-    logarithmic: true,
-    name: 'Frequency',
-    unit: 'Hz',
-  ),
-  AudParamSpec(
-    address: AudParamAddress('filter', 'cutoff'),
-    min: 20,
-    max: 20000,
-    defaultValue: 1000,
-    logarithmic: true,
-    name: 'Cutoff',
-    unit: 'Hz',
-  ),
-  AudParamSpec(
-    address: AudParamAddress('out', 'gain'),
-    min: 0,
-    max: 1,
-    defaultValue: 0.5,
-    name: 'Gain',
-  ),
-];
+const specs = [frequencySpec, cutoffSpec, gainSpec];
 
 void main() => runApp(const ControlsExample());
 
@@ -72,6 +77,7 @@ class ControlsExample extends StatefulWidget {
   /// Creates the example.
   const ControlsExample({super.key, this.sink});
 
+  // ...........................................................................
   /// The sink; a new one by default.
   final ExampleSink? sink;
 
@@ -79,6 +85,8 @@ class ControlsExample extends StatefulWidget {
   State<ControlsExample> createState() => _ControlsExampleState();
 }
 
+// #############################################################################
+/// The bindings, the geometry and the automation of [ControlsExample].
 class _ControlsExampleState extends State<ControlsExample> {
   late final ExampleSink _sink = widget.sink ?? ExampleSink();
   late final List<AudParamBinding> _bindings = [
@@ -88,15 +96,8 @@ class _ControlsExampleState extends State<ControlsExample> {
   Timer? _automation;
 
   @override
-  void initState() {
-    super.initState();
-    _sink.addListener(_showCalls);
-  }
-
-  @override
   void dispose() {
     _automation?.cancel();
-    _sink.removeListener(_showCalls);
     for (final binding in _bindings) {
       binding.dispose();
     }
@@ -107,23 +108,20 @@ class _ControlsExampleState extends State<ControlsExample> {
     super.dispose();
   }
 
-  void _showCalls() => setState(() {});
-
   // ...........................................................................
   /// Sweeps the cutoff from 200 Hz to 5 kHz and back in 60 steps, through
   /// the sink's change stream.
   void _automate() {
     _automation?.cancel();
-    final cutoff = specs[1];
+    final low = cutoffSpec.toNormalized(200);
+    final high = cutoffSpec.toNormalized(5000);
     var step = 0;
     _automation = Timer.periodic(const Duration(milliseconds: 33), (timer) {
       final phase = step <= 30 ? step / 30 : (60 - step) / 30;
-      final low = cutoff.toNormalized(200);
-      final high = cutoff.toNormalized(5000);
       _sink.emit(
         AudParamChange(
-          cutoff.address,
-          cutoff.toPlain(low + (high - low) * phase),
+          address: cutoffSpec.address,
+          value: cutoffSpec.toPlain(low + (high - low) * phase),
         ),
       );
       if (++step > 60) timer.cancel();
@@ -132,7 +130,6 @@ class _ControlsExampleState extends State<ControlsExample> {
 
   @override
   Widget build(BuildContext context) {
-    final calls = _sink.calls;
     return MaterialApp(
       title: 'aud_audio_ui_controls',
       theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
@@ -181,12 +178,15 @@ class _ControlsExampleState extends State<ControlsExample> {
               ),
               const SizedBox(height: 8),
               Expanded(
-                child: ListView(
-                  key: const Key('calls'),
-                  children: [
-                    for (final call in calls.reversed.take(12))
-                      Text(call, style: const TextStyle(fontFamily: 'Menlo')),
-                  ],
+                child: ListenableBuilder(
+                  listenable: _sink,
+                  builder: (context, _) => ListView(
+                    key: const Key('calls'),
+                    children: [
+                      for (final call in _sink.calls.reversed.take(12))
+                        Text(call, style: const TextStyle(fontFamily: 'Menlo')),
+                    ],
+                  ),
                 ),
               ),
             ],

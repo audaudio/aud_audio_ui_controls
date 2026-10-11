@@ -4,6 +4,8 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
+import 'dart:math' as math;
+
 import 'package:aud_audio_ui_controls/aud_audio_ui_controls.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -15,7 +17,10 @@ void main() {
     late double value;
     late bool lastActive;
 
-    Future<void> pump(WidgetTester tester) async {
+    Future<void> pump(
+      WidgetTester tester, {
+      AudControlGeometry geometry = const AudVerticalDragGeometry(),
+    }) async {
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
@@ -25,6 +30,7 @@ void main() {
               child: StatefulBuilder(
                 builder: (context, setState) => AudControl(
                   value: value,
+                  geometry: geometry,
                   onStarted: () => events.add('start'),
                   onChanged: (v) => setState(() {
                     value = v;
@@ -82,6 +88,41 @@ void main() {
       expect(events.first, 'start');
       expect(events.last, 'end');
       expect(events.where((e) => e == 'start').length, 1);
+    });
+
+    for (final clockwise in [true, false]) {
+      final (from, to) = clockwise ? (0.0, 1.0) : (1.0, 0.0);
+      testWidgets(
+        'turns ${clockwise ? 'clockwise' : 'back'} by 270° from $from to $to',
+        (tester) async {
+          value = from;
+          await pump(tester, geometry: const AudAngularDragGeometry());
+          final center = tester.getCenter(find.byType(AudControl));
+          Offset at(int degrees) =>
+              center + Offset.fromDirection(degrees * math.pi / 180, 30);
+          // Along the arc of a knob, which runs clockwise from 135° to 405°.
+          final start = clockwise ? 135 : 405;
+          final step = clockwise ? 15 : -15;
+          final gesture = await tester.startGesture(at(start));
+          for (var i = 1; i <= 18; i++) {
+            await gesture.moveTo(at(start + i * step));
+          }
+          await gesture.up();
+          expect(value, closeTo(to, 1e-9));
+        },
+      );
+    }
+
+    testWidgets('ends a gesture once when removed during it', (tester) async {
+      await pump(tester);
+      final center = tester.getCenter(find.byType(AudControl));
+      final gesture = await tester.startGesture(center);
+      await gesture.moveBy(const Offset(0, -20));
+      await tester.pumpWidget(const SizedBox());
+      await gesture.moveBy(const Offset(0, -20));
+      await gesture.up();
+      expect(tester.takeException(), isNull);
+      expect(events, ['start', 'change 0.600', 'end']);
     });
 
     testWidgets('ignores pointers it does not track', (tester) async {

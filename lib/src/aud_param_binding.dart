@@ -29,6 +29,7 @@ class AudParamBinding extends ChangeNotifier
     });
   }
 
+  // ...........................................................................
   /// Where the edits go.
   final AudParamSink sink;
 
@@ -39,6 +40,7 @@ class AudParamBinding extends ChangeNotifier
   double _value;
   bool _active = false;
 
+  // ...........................................................................
   @override
   double get value => _value;
 

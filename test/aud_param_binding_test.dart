@@ -8,7 +8,7 @@ import 'package:aud_audio_ui_controls/aud_audio_ui_controls.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const address = AudParamAddress('out', 'master');
+  const address = AudParamAddress(nodeId: 'out', paramId: 'master');
   const spec = AudParamSpec(address: address, min: 0, max: 4, defaultValue: 1);
 
   group('AudParamBinding', () {
@@ -64,12 +64,17 @@ void main() {
     });
 
     test('follows values that change outside', () {
-      sink.emit(const AudParamChange(address, 3));
+      sink.emit(const AudParamChange(address: address, value: 3));
       expect(binding.value, 0.75);
       expect(notifications, 1);
-      sink.emit(const AudParamChange(address, 3));
+      sink.emit(const AudParamChange(address: address, value: 3));
       expect(notifications, 1);
-      sink.emit(const AudParamChange(AudParamAddress('osc', 'x'), 0));
+      sink.emit(
+        const AudParamChange(
+          address: AudParamAddress(nodeId: 'osc', paramId: 'x'),
+          value: 0,
+        ),
+      );
       expect(binding.value, 0.75);
       expect(sink.calls, isEmpty);
     });

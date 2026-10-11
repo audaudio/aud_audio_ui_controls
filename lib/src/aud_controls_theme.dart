@@ -24,6 +24,7 @@ class AudControlsThemeData {
     ),
   });
 
+  // ...........................................................................
   /// The color of the unfilled track.
   final Color trackColor;
 
@@ -75,6 +76,7 @@ class AudControlsTheme extends InheritedWidget {
   /// Creates the theme.
   const AudControlsTheme({super.key, required this.data, required super.child});
 
+  // ...........................................................................
   /// The theme.
   final AudControlsThemeData data;
 

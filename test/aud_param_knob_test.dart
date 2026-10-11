@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const address = AudParamAddress('filter', 'cutoff');
+  const address = AudParamAddress(nodeId: 'filter', paramId: 'cutoff');
   const spec = AudParamSpec(
     address: address,
     min: 20,
@@ -59,7 +59,7 @@ void main() {
 
     testWidgets('moves with values from outside', (tester) async {
       await tester.pumpWidget(knob());
-      sink.emit(const AudParamChange(address, 20000));
+      sink.emit(const AudParamChange(address: address, value: 20000));
       await tester.pump();
       expect(find.text('20000 Hz'), findsOneWidget);
     });

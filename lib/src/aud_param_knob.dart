@@ -30,6 +30,7 @@ class AudParamKnob extends StatelessWidget {
     this.geometry = const AudVerticalDragGeometry(),
   });
 
+  // ...........................................................................
   /// The parameter.
   final AudParamBinding binding;
 

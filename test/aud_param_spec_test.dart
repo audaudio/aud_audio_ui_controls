@@ -8,7 +8,7 @@ import 'package:aud_audio_ui_controls/aud_audio_ui_controls.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const address = AudParamAddress('filter', 'cutoff');
+  const address = AudParamAddress(nodeId: 'filter', paramId: 'cutoff');
 
   group('AudParamAddress', () {
     test('names the parameter as an OSC path', () {
@@ -17,13 +17,22 @@ void main() {
     });
 
     test('compares by node and parameter', () {
-      expect(address, const AudParamAddress('filter', 'cutoff'));
+      expect(
+        address,
+        const AudParamAddress(nodeId: 'filter', paramId: 'cutoff'),
+      );
       expect(
         address.hashCode,
-        const AudParamAddress('filter', 'cutoff').hashCode,
+        const AudParamAddress(nodeId: 'filter', paramId: 'cutoff').hashCode,
       );
-      expect(address == const AudParamAddress('filter', 'mode'), isFalse);
-      expect(address == const AudParamAddress('osc', 'cutoff'), isFalse);
+      expect(
+        address == const AudParamAddress(nodeId: 'filter', paramId: 'mode'),
+        isFalse,
+      );
+      expect(
+        address == const AudParamAddress(nodeId: 'osc', paramId: 'cutoff'),
+        isFalse,
+      );
     });
   });
 
@@ -101,6 +110,32 @@ void main() {
       expect(linear.format(0.5), '0.50');
       expect(stepped.format(2), '2');
       expect(logarithmic.name, 'Cutoff');
+    });
+
+    test('formats integral steps without decimals, with their unit', () {
+      const transpose = AudParamSpec(
+        address: address,
+        min: -24,
+        max: 24,
+        defaultValue: 0,
+        steps: 49,
+        unit: 'st',
+      );
+      expect(transpose.format(transpose.toPlain(0.25)), '-12 st');
+      expect(transpose.format(0), '0 st');
+    });
+
+    test('formats fractional steps with their digits', () {
+      const quarters = AudParamSpec(
+        address: address,
+        min: 0,
+        max: 1,
+        defaultValue: 0,
+        steps: 5,
+      );
+      expect(quarters.format(quarters.toPlain(0.25)), '0.25');
+      expect(quarters.format(quarters.toPlain(0.5)), '0.50');
+      expect(quarters.format(quarters.toPlain(1)), '1');
     });
   });
 }

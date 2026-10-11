@@ -11,14 +11,16 @@ import 'dart:math' as math;
 /// graph document, as the OSC address `/<node>/<param>` names it.
 final class AudParamAddress {
   /// Creates an address.
-  const AudParamAddress(this.nodeId, this.paramId);
+  const AudParamAddress({required this.nodeId, required this.paramId});
 
+  // ...........................................................................
   /// The node id in the graph document.
   final String nodeId;
 
   /// The parameter id in the node's descriptor.
   final String paramId;
 
+  // ...........................................................................
   /// The address as an OSC path.
   String get path => '/$nodeId/$paramId';
 
@@ -60,6 +62,7 @@ final class AudParamSpec {
     this.unit = '',
   });
 
+  // ...........................................................................
   /// The parameter.
   final AudParamAddress address;
 
@@ -112,11 +115,14 @@ final class AudParamSpec {
   }
 
   // ...........................................................................
-  /// The plain value as text with its unit.
+  /// The plain value as text with its unit: a whole step without decimals,
+  /// any other value with two digits below 10, one below 100 and none above.
   String format(double plain) {
-    if (steps >= 2) return plain.round().toString();
     final digits = plain.abs() >= 100 ? 0 : (plain.abs() >= 10 ? 1 : 2);
-    final text = plain.toStringAsFixed(digits);
+    final whole = steps >= 2 && plain == plain.roundToDouble();
+    final text = whole
+        ? plain.round().toString()
+        : plain.toStringAsFixed(digits);
     return unit.isEmpty ? text : '$text $unit';
   }
 }

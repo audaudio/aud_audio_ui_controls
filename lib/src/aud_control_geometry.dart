@@ -30,6 +30,11 @@ sealed class AudControlGeometry {
   // ...........................................................................
   /// The value after a scroll of [delta] logical pixels from [value].
   double scrolled({required double value, required Offset delta});
+
+  // ...........................................................................
+  /// The logical pixels of a drag or a scroll over the whole range, unless a
+  /// geometry is given its own.
+  static const double defaultPointsPerRange = 200;
 }
 
 // #############################################################################
@@ -37,8 +42,11 @@ sealed class AudControlGeometry {
 /// whole range, whatever the size of the control.
 final class AudVerticalDragGeometry extends AudControlGeometry {
   /// Creates the geometry.
-  const AudVerticalDragGeometry({this.pointsPerRange = 200});
+  const AudVerticalDragGeometry({
+    this.pointsPerRange = AudControlGeometry.defaultPointsPerRange,
+  });
 
+  // ...........................................................................
   /// The logical pixels of a drag over the whole range.
   final double pointsPerRange;
 
@@ -58,11 +66,14 @@ final class AudVerticalDragGeometry extends AudControlGeometry {
 // #############################################################################
 /// Turning around the center raises the value clockwise: the angle the
 /// pointer sweeps around the control's center, over [angularRange] radians
-/// for the whole range.
+/// for the whole range. One step takes the shorter way around the center;
+/// the control starts each move where the last one ended, so a gesture turns
+/// as far as the range reaches.
 final class AudAngularDragGeometry extends AudControlGeometry {
   /// Creates the geometry.
   const AudAngularDragGeometry({this.angularRange = 1.5 * math.pi});
 
+  // ...........................................................................
   /// The radians of a turn over the whole range.
   final double angularRange;
 
@@ -83,6 +94,8 @@ final class AudAngularDragGeometry extends AudControlGeometry {
   }
 
   @override
-  double scrolled({required double value, required Offset delta}) =>
-      (value - delta.dy / 200).clamp(0.0, 1.0);
+  double scrolled({required double value, required Offset delta}) {
+    final step = delta.dy / AudControlGeometry.defaultPointsPerRange;
+    return (value - step).clamp(0.0, 1.0);
+  }
 }

@@ -39,6 +39,7 @@ class AudControl extends StatefulWidget {
     required this.builder,
   });
 
+  // ...........................................................................
   /// The value in 0 to 1.
   final double value;
 
@@ -61,6 +62,9 @@ class AudControl extends StatefulWidget {
   State<AudControl> createState() => _AudControlState();
 }
 
+// #############################################################################
+/// The gesture layer of [AudControl]: tracks the active pointers and turns
+/// the movement of their average into values.
 class _AudControlState extends State<AudControl> {
   final Map<int, Offset> _pointers = {};
   Offset _start = Offset.zero;
@@ -77,8 +81,9 @@ class _AudControlState extends State<AudControl> {
     return sum / _pointers.length.toDouble();
   }
 
-  // Starts counting from the averaged point again, so that a finger that
-  // joins or leaves does not jump the value.
+  // Starts counting from the averaged point again: after every move, so that
+  // the angular drag turns further than half a turn, and when a finger joins
+  // or leaves, so that the value does not jump.
   void _anchor() {
     _start = _average;
     _startValue = _current;
@@ -95,8 +100,10 @@ class _AudControlState extends State<AudControl> {
     _anchor();
   }
 
+  // The gesture binding delivers the moves and the end of a pointer to the
+  // control it went down on, even after the control left the tree.
   void _move(PointerMoveEvent event) {
-    if (!_pointers.containsKey(event.pointer)) return;
+    if (!mounted || !_pointers.containsKey(event.pointer)) return;
     _pointers[event.pointer] = event.localPosition;
     final next = widget.geometry.valueFor(
       start: _start,
@@ -104,11 +111,14 @@ class _AudControlState extends State<AudControl> {
       startValue: _startValue,
       size: context.size ?? Size.zero,
     );
-    if (next == _current) return;
+    final changed = next != _current;
     _current = next;
-    widget.onChanged?.call(next);
+    _anchor();
+    if (changed) widget.onChanged?.call(next);
   }
 
+  // Ends the gesture even after the control left the tree, so that the
+  // gesture of a bound parameter closes.
   void _up(PointerEvent event) {
     if (_pointers.remove(event.pointer) == null) return;
     if (_active) {
@@ -116,7 +126,7 @@ class _AudControlState extends State<AudControl> {
       return;
     }
     widget.onEnded?.call();
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   void _signal(PointerSignalEvent event) {
