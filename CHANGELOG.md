@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Make all repos run on Windows
+
 ## 0.1.0 - 2026-10-11
 
 ### Added
@@ -32,6 +38,7 @@
 - Rebuild the README along the template with runnable examples and every export
 
 - Add landmarks and named constants; rebuild only the call log of the example
+
 
 ## 0.0.2 - 2026-10-08
 
