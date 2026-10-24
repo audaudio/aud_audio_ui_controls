@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 - 2026-10-24
 
 ### Changed
 
@@ -38,7 +38,6 @@
 - Rebuild the README along the template with runnable examples and every export
 
 - Add landmarks and named constants; rebuild only the call log of the example
-
 
 ## 0.0.2 - 2026-10-08
 
