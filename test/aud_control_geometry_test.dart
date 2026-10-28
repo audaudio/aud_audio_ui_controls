@@ -43,9 +43,8 @@ void main() {
     test('scrolls', () {
       expect(geometry.scrolled(value: 0.5, delta: const Offset(0, -20)), 0.6);
       expect(
-        const AudVerticalDragGeometry(
-          pointsPerRange: 100,
-        ).scrolled(value: 0.95, delta: const Offset(0, -20)),
+        const AudVerticalDragGeometry(pointsPerRange: 100)
+            .scrolled(value: 0.95, delta: const Offset(0, -20)),
         1,
       );
     });

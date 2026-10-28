@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Require Dart 3.13 and Flutter 3.47, upgrade deps
+
+- Require Dart 3.13 and Flutter 3.47
+- Upgrade helix to ^1.14.0
+- Upgrade dna_audanika to ^0.1.0
+- Set the identity the DNA layers ask for in dna/_vars.json
+- Reformat 2 files with the Dart 3.13 formatter
+- Add the blog post of this change, in English and German
+- Bring the README to the README template, in English and German
+
 ## 0.1.1 - 2026-10-24
 
 ### Changed
@@ -38,6 +52,7 @@
 - Rebuild the README along the template with runnable examples and every export
 
 - Add landmarks and named constants; rebuild only the call log of the example
+
 
 ## 0.0.2 - 2026-10-08
 
