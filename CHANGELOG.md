@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 - 2026-10-28
+
+### Changed
+
+- Resolve the example together with the package
+
+- Add the example to a pub workspace, resolution: workspace in the example
+
+- Drop the lock file of the example, the package lock covers it
+
 ## 0.2.0 - 2026-10-28
 
 ### Changed
