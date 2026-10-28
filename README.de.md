@@ -1,10 +1,20 @@
 # aud_audio_ui_controls
 
-Drehregler, Schieberegler, Räder, Ribbon, Joystick und XY-Pad der Audanika Audio Engine, nach dem Vorbild von AudioKit Controls.
+[English](README.md) | Deutsch
 
-Teil der Audanika Audio Engine; geplant in [aud_audio_pm](https://github.com/audaudio/aud_audio_pm).
+[![CI](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml)
 
-## Ziele
+Drehregler, Schieberegler, Räder, Ribbon, Joystick und XY-Pad der Audanika
+Audio Engine, nach dem Vorbild von AudioKit Controls. Reines Flutter, frei
+von der Engine und von nativem Code; Teil der Audanika Audio Engine,
+geplant in [aud_audio_pm](https://github.com/audaudio/aud_audio_pm).
+
+## Motivation
+
+Die Editoren der Audanika Audio Engine — die App, das VST3- und das
+AUv3-Plugin — brauchen dieselben Drehregler, und keiner von ihnen darf die
+Engine in die Oberfläche ziehen. AudioKit Controls zeigt, mit wie wenigen
+Grundbausteinen das geht. Das Paket zielt auf:
 
 - Ein generisches Control nach AudioKit Controls (Entscheidung ui-002):
   ein Wert von 0 bis 1, eine Geometrie, die Zeigerbewegungen in ihn
@@ -20,17 +30,10 @@ Teil der Audanika Audio Engine; geplant in [aud_audio_pm](https://github.com/aud
 - Ein vererbtes Theme statt der Copy-on-Write-Modifier von AudioKit
 - Golden-Tests für jedes Aussehen
 
-## Stand
-
-[![Tests](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml)
-
-Die erste Scheibe von Schritt S17a (0.1.0, Ticket 24), gebaut für den
-Spike S0-plugin-ui: `AudControl` mit dem vertikalen und dem
-Winkel-Ziehen, `AudArcKnob` und die Parameter-Bindung. Die übrigen
-Geometrien, das Control für zwei Parameter sowie Schieberegler, Räder,
-Ribbon, Joystick und XY-Pad folgen mit S17a.
-
 ## Installation
+
+Das Paket ist nicht auf pub.dev veröffentlicht; binde es über seine
+Git-Tags ein:
 
 ```yaml
 dependencies:
@@ -43,20 +46,7 @@ dependencies:
 
 Das Paket braucht nur das Flutter-SDK: keine Engine, keinen nativen Code.
 
-## Dokumentation
-
-- [Der Plan von Ticket 24](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/tickets/2026-10-09-24-spike-a-flutter-editor-for-the-plugin-shells.md)
-  mit den Befunden des Spikes
-- Die Entscheidungen
-  [ui-002](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-002.md)
-  (Controls nach AudioKit Controls) und
-  [ui-003](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-003.md)
-  (Widgets über Senken gebunden, nicht an die Engine)
-- [AudioKit Controls](https://github.com/AudioKit/Controls), die Vorlage
-  (MIT)
-- Die Guides in [`doc/guides`](doc/guides)
-
-## Code-Beispiele
+## Verwendung
 
 Ein Drehregler, an die Cutoff-Frequenz eines Filters gebunden, um seine
 Mitte gedreht, in einem orangen Theme; die Senke im Speicher zeichnet
@@ -145,6 +135,15 @@ void main() {
 }
 ```
 
+Ein Ziehen am Drehregler gibt zum Beispiel aus:
+
+```text
+begin /out/gain
+set /out/gain 0.52
+set /out/gain 0.55
+end /out/gain
+```
+
 Die Beispiel-App in [`example`](example) bindet drei Drehregler an eine
 Senke im Speicher, wechselt zwischen vertikalem und Winkel-Ziehen, listet,
 was die Senke empfängt, und automatisiert die Cutoff-Frequenz von außen:
@@ -153,6 +152,31 @@ was die Senke empfängt, und automatisiert die Cutoff-Frequenz von außen:
 cd example
 flutter run -d macos
 ```
+
+## Grenzen
+
+- Die Widgets sprechen nicht mit der Engine. Eine App bindet sie über
+  `aud_audio_ui_bindings` (Schritt S17a) an `AudEngine`, der Editor eines
+  Plugins implementiert `AudParamSink` über das Protokoll seiner Shell.
+- Ein Control liest rohe Zeiger-Ereignisse und nimmt nicht an der
+  Gesten-Arena teil: In einer scrollenden Ansicht gewinnt es jedes
+  Ziehen. Gesten-Arena und Trackpad-Pan-Zoom folgen mit S17a.
+- Bisher gibt es nur den Bogen-Drehregler mit vertikalem und
+  Winkel-Ziehen; siehe [Stand](#stand).
+
+## Dokumentation
+
+- [Der Plan von Ticket 24](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/tickets/2026-10-09-24-spike-a-flutter-editor-for-the-plugin-shells.md)
+  mit den Befunden des Spikes
+- Die Entscheidungen
+  [ui-002](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-002.md)
+  (Controls nach AudioKit Controls) und
+  [ui-003](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-003.md)
+  (Widgets über Senken gebunden, nicht an die Engine)
+- [AudioKit Controls](https://github.com/AudioKit/Controls), die Vorlage
+  (MIT)
+- Die Guides in [`doc/guides`](doc/guides) und die Blog-Posts in
+  [`doc/blog`](doc/blog)
 
 ## Funktionsweise
 
@@ -191,8 +215,21 @@ flutter run -d macos
   seiner Shell.
 - `audAudioUiControlsVersion` hält die Version des Pakets.
 
+## Stand
+
+Vor 1.0 — die API kann sich zwischen Minor-Versionen ändern. Das Paket
+enthält die erste Scheibe von Schritt S17a (0.1.0, Ticket 24), gebaut für
+den Spike S0-plugin-ui: `AudControl` mit dem vertikalen und dem
+Winkel-Ziehen, `AudArcKnob` und die Parameter-Bindung. Die übrigen
+Geometrien, das Control für zwei Parameter sowie Schieberegler, Räder,
+Ribbon, Joystick und XY-Pad folgen mit S17a.
+
 ## Mitwirken
 
 Tickets laufen durch den `gg`-Workflow: siehe den
 [Develop Guide](doc/guides/develop-guide.md) und den
 [Review Guide](doc/guides/for-ai/ai-review-guide.md).
+
+## Lizenz
+
+MIT — siehe [LICENSE](LICENSE).

@@ -12,8 +12,11 @@ import 'aud_control_geometry.dart';
 // #############################################################################
 /// Builds the look of a control from its value in 0 to 1 and whether a
 /// gesture runs.
-typedef AudControlBuilder =
-    Widget Function(BuildContext context, double value, bool active);
+typedef AudControlBuilder = Widget Function(
+  BuildContext context,
+  double value,
+  bool active,
+);
 
 // #############################################################################
 /// The generic control of AudioKit Controls (decision ui-002): one value in

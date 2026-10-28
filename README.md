@@ -1,10 +1,20 @@
 # aud_audio_ui_controls
 
-Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio Engine, modeled on AudioKit Controls.
+English | [Deutsch](README.de.md)
 
-Part of the Audanika Audio Engine; planned in [aud_audio_pm](https://github.com/audaudio/aud_audio_pm).
+[![CI](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml)
 
-## Goals
+Knobs, sliders, wheels, ribbon, joystick and XY pad of the Audanika Audio
+Engine, modeled on AudioKit Controls. Pure Flutter, free of the engine and
+of native code; part of the Audanika Audio Engine, planned in
+[aud_audio_pm](https://github.com/audaudio/aud_audio_pm).
+
+## Motivation
+
+The editors of the Audanika Audio Engine — the app, the VST3 and the AUv3
+plugin — need the same knobs, and none of them may drag the engine into
+the UI. AudioKit Controls shows how few primitives that takes. The package
+aims for:
 
 - One generic control after AudioKit Controls (decision ui-002): a value
   in 0 to 1, a geometry that turns pointer movement into it and a builder
@@ -19,17 +29,9 @@ Part of the Audanika Audio Engine; planned in [aud_audio_pm](https://github.com/
 - An inherited theme instead of AudioKit's copy-on-write modifiers
 - Golden tests for every look
 
-## State
-
-[![Tests](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/audaudio/aud_audio_ui_controls/actions/workflows/quick_check.yaml)
-
-The first slice of step S17a (0.1.0, ticket 24), built for the spike
-S0-plugin-ui: `AudControl` with the vertical and the angular drag,
-`AudArcKnob` and the parameter binding. The other geometries, the control
-for two parameters and the sliders, wheels, ribbon, joystick and XY pad
-follow with S17a.
-
 ## Installation
+
+The package is not published to pub.dev; add it from its git tags:
 
 ```yaml
 dependencies:
@@ -43,20 +45,7 @@ dependencies:
 The package needs the Flutter SDK and nothing else: no engine, no native
 code.
 
-## Documentation
-
-- [The plan of ticket 24](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/tickets/2026-10-09-24-spike-a-flutter-editor-for-the-plugin-shells.md)
-  with the findings of the spike
-- The decisions
-  [ui-002](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-002.md)
-  (controls after AudioKit Controls) and
-  [ui-003](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-003.md)
-  (widgets bound through sinks, not to the engine)
-- [AudioKit Controls](https://github.com/AudioKit/Controls), the template
-  (MIT)
-- The guides in [`doc/guides`](doc/guides)
-
-## Code Examples
+## Usage
 
 A knob bound to the cutoff of a filter, turned around its center, in an
 orange theme; the in-memory sink records what an engine would receive:
@@ -143,6 +132,15 @@ void main() {
 }
 ```
 
+A drag of the knob prints, for example:
+
+```text
+begin /out/gain
+set /out/gain 0.52
+set /out/gain 0.55
+end /out/gain
+```
+
 The example app in [`example`](example) binds three knobs to an in-memory
 sink, switches between the vertical and the angular drag, lists what the
 sink receives and automates the cutoff from outside:
@@ -152,7 +150,32 @@ cd example
 flutter run -d macos
 ```
 
-## How It Works
+## Limitations
+
+- The widgets do not talk to the engine. An app binds them to `AudEngine`
+  through `aud_audio_ui_bindings` (step S17a), a plugin's editor
+  implements `AudParamSink` over its shell's protocol.
+- A control reads raw pointer events and takes no part in the gesture
+  arena: inside a scrolling view it wins every drag. The gesture arena
+  and trackpad pan-zoom follow with S17a.
+- Only the arc knob with the vertical and the angular drag exists yet;
+  see [Status](#status).
+
+## Documentation
+
+- [The plan of ticket 24](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/tickets/2026-10-09-24-spike-a-flutter-editor-for-the-plugin-shells.md)
+  with the findings of the spike
+- The decisions
+  [ui-002](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-002.md)
+  (controls after AudioKit Controls) and
+  [ui-003](https://github.com/audaudio/aud_audio_pm/blob/main/doc/2026-Q4/concepts/decisions/ui-003.md)
+  (widgets bound through sinks, not to the engine)
+- [AudioKit Controls](https://github.com/AudioKit/Controls), the template
+  (MIT)
+- The guides in [`doc/guides`](doc/guides) and the blog posts in
+  [`doc/blog`](doc/blog)
+
+## How it works
 
 - `AudControl` holds one value in 0 to 1 and gets its look from an
   `AudControlBuilder`. It reads raw pointer events — no gesture arena, no
@@ -184,8 +207,21 @@ flutter run -d macos
   plugin's editor implements `AudParamSink` over its shell's protocol.
 - `audAudioUiControlsVersion` holds the version of the package.
 
+## Status
+
+Before 1.0 — the API may change between minor versions. The package holds
+the first slice of step S17a (0.1.0, ticket 24), built for the spike
+S0-plugin-ui: `AudControl` with the vertical and the angular drag,
+`AudArcKnob` and the parameter binding. The other geometries, the control
+for two parameters and the sliders, wheels, ribbon, joystick and XY pad
+follow with S17a.
+
 ## Contributing
 
 Tickets run through the `gg` workflow: see the
 [Develop Guide](doc/guides/develop-guide.md) and the
 [Review Guide](doc/guides/for-ai/ai-review-guide.md).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
