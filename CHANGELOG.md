@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Resolve the example together with the package
+
+- Add the example to a pub workspace, resolution: workspace in the example
+- Drop the lock file of the example, the package lock covers it
+
 ## 0.2.0 - 2026-10-28
 
 ### Changed
@@ -23,6 +32,7 @@
 - Upgrade the dependencies published since the first pass
 
 - Lift the lock file to the newest resolvable versions
+
 
 ## 0.1.1 - 2026-10-24
 
@@ -62,6 +72,7 @@
 - Rebuild the README along the template with runnable examples and every export
 
 - Add landmarks and named constants; rebuild only the call log of the example
+
 
 ## 0.0.2 - 2026-10-08
 

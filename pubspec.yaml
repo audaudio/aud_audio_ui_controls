@@ -9,6 +9,11 @@ environment:
   sdk: ^3.13.0
   flutter: ">=3.47.0"
 
+# The example resolves together with the package, so that upgrading the
+# package upgrades the example too.
+workspace:
+  - example
+
 dependencies:
   flutter:
     sdk: flutter
