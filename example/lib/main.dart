@@ -7,7 +7,7 @@
 import 'dart:async';
 
 import 'package:aud_audio_ui_controls/aud_audio_ui_controls.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The frequency of the oscillator.
 const frequencySpec = AudParamSpec(
